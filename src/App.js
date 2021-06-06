@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import react, { useEffect, useState } from "react";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import List from "./components/List";
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+const BASE_URL = "https://dummyapi.io/data/api";
+const APP_ID = "60bc0bef7e2ad7245e1ad94b";
+
+function App () {
+    const [contacts, setContacts] = useState({data:[]});
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        setLoading(true);
+        axios.get(`${BASE_URL}/user/?limit=5`,{headers:{"app-id":APP_ID}})
+        .then(({data})=>setContacts(data))
+        .catch(console.error)
+        .finally(() => setLoading(false));
+    }, [])
+    return (
+    <div>
+        <Header />
+        <List loading={loading} contacts={contacts} />
+        <Footer />
+    </div> 
+    )
 }
+
 
 export default App;
